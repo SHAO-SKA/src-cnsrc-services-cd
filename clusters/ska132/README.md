@@ -26,3 +26,15 @@
     * ```shell
       argocd app sync argocd/basic-components && argocd app wait argocd/basic-components
       ```
+    * ```shell
+      argocd app sync argocd/ingress-nginx && argocd app wait argocd/ingress-nginx
+      ```
+    * ```shell
+      argocd app sync argocd/cert-manager && argocd app wait argocd/cert-manager
+      #YOUR_ACCESS_KEY_ID=xxxxxxxxxxx
+      #YOUR_ACCESS_KEY_SECRET=yyyyyyyyyyy
+      kubectl -n basic-components create secret generic alidns-webhook-zverse-secrets \
+        --from-literal="access-token=$YOUR_ACCESS_KEY_ID" \
+        --from-literal="secret-key=$YOUR_ACCESS_KEY_SECRET"
+      argocd app sync argocd/cert-manager-issuer && argocd app wait argocd/cert-manager-issuer
+      ```
