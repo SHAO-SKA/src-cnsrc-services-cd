@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: applications
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: default
+  sources:
+    - path: clusters/ska132/applications/basic-components
+      repoURL: https://gitlab.com/ska-telescope/src/deployments/cnsrc/ska-src-cnsrc-services-cd.git
+      targetRevision: main
