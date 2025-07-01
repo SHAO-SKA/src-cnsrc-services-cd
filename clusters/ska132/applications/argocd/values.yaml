@@ -1,0 +1,8 @@
+crds:
+  install: true
+  keep: false
+server:
+  service:
+    type: NodePort
+    nodePortHttp: 30080
+    nodePortHttps: 30443
