@@ -12,6 +12,6 @@ spec:
     - path: clusters/ska132/applications/basic-components/cluster-issuer
       repoURL: https://gitlab.com/ska-telescope/src/deployments/cnsrc/ska-src-cnsrc-services-cd.git
       targetRevision: main
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: basic-components
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: basic-components
