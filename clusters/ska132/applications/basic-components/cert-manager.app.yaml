@@ -35,6 +35,6 @@ spec:
           startupapicheck:
             image:
               repository: m.daocloud.io/quay.io/jetstack/cert-manager-startupapicheck
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: basic-components
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: basic-components
