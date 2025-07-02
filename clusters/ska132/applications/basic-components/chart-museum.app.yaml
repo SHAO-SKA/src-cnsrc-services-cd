@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chart-museum
+spec:
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: basic-components
+  sources:
+    - repoURL: https://chartmuseum.github.io/charts
+      chart: chartmuseum
+      targetRevision: 3.10.3
+      helm:
+        releaseName: chart-museum
+        valuesObject:
+          replicaCount: 1
+          image:
+            repository: m.daocloud.io/ghcr.io/helm/chartmuseum
+          env:
+            open:
+              DISABLE_API: false
+              STORAGE: local
+          serviceMonitor:
+            enabled: false
+            # namespace: prometheus
+            labels: {}
+            metricsPath: "/metrics"
+            # timeout: 60
+            # interval: 60
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 80m
+              memory: 64Mi
+          persistence:
+            enabled: true
+            storageClass: nfs-external-nas
+            size: 8Gi
+          volumePermissions:
+            image:
+              registry: docker.io
+          ingress:
+            enabled: true
+            annotations:
+              cert-manager.io/cluster-issuer: alidns-webhook-zverse-letsencrypt
+              nginx.ingress.kubernetes.io/rewrite-target: /$1
+            ingressClassName: nginx
+            hosts:
+              - name: chart-museum.internal.ska.zverse.space
+                path: /?(.*)
+                tls: true
+                tlsSecret: chart-museum.internal.ska.zverse.space-tls
