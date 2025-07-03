@@ -23,22 +23,37 @@
       ```
     * sub modules will be introduced by the root-app
 3. sync and wait for `basic-components` to be ready
-    * ```shell
-      argocd app sync argocd/basic-components && argocd app wait argocd/basic-components
-      ```
-    * ```shell
-      argocd app sync argocd/ingress-nginx && argocd app wait argocd/ingress-nginx
-      ```
-    * ```shell
-      argocd app sync argocd/cert-manager && argocd app wait argocd/cert-manager
-      argocd app sync argocd/alidns-webhook-zverse && argocd app wait argocd/alidns-webhook-zverse
-      #YOUR_ACCESS_KEY_ID=xxxxxxxxxxx
-      #YOUR_ACCESS_KEY_SECRET=yyyyyyyyyyy
-      kubectl -n basic-components create secret generic alidns-webhook-zverse-secrets \
-        --from-literal="access-token=$YOUR_ACCESS_KEY_ID" \
-        --from-literal="secret-key=$YOUR_ACCESS_KEY_SECRET"
-      argocd app sync argocd/cert-manager-issuer && argocd app wait argocd/cert-manager-issuer
-      ```
-    * ```shell
-      argocd app sync argocd/chart-museum && argocd app wait argocd/chart-museum
-      ```
+    * sub module entrance
+        + ```shell
+          argocd app sync argocd/basic-components && argocd app wait argocd/basic-components
+          ```
+    * without storage class
+        + ```shell
+          argocd app sync argocd/ingress-nginx && argocd app wait argocd/ingress-nginx
+          ```
+        + ```shell
+          argocd app sync argocd/cert-manager && argocd app wait argocd/cert-manager
+          argocd app sync argocd/alidns-webhook-zverse && argocd app wait argocd/alidns-webhook-zverse
+          #YOUR_ACCESS_KEY_ID=xxxxxxxxxxx
+          #YOUR_ACCESS_KEY_SECRET=yyyyyyyyyyy
+          kubectl -n basic-components create secret generic alidns-webhook-zverse-secrets \
+            --from-literal="access-token=$YOUR_ACCESS_KEY_ID" \
+            --from-literal="secret-key=$YOUR_ACCESS_KEY_SECRET"
+          argocd app sync argocd/cert-manager-issuer && argocd app wait argocd/cert-manager-issuer
+          ```
+    * with storage class
+        + [make storage ready](#storage-dependency)
+        + ```shell
+          argocd app sync argocd/chart-museum && argocd app wait argocd/chart-museum
+          ```
+4. sync and wait for `storage` to be ready
+    * sub module entrance
+        + ```shell
+          argocd app sync argocd/storage && argocd app wait argocd/storage
+          ```
+    * sub module sync
+        + ```shell
+          argocd app sync argocd/nfs-provisioner && argocd app wait argocd/nfs-provisioner
+          ```
+        
+
