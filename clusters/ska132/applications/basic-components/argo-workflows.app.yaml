@@ -45,7 +45,6 @@ spec:
               ingressClassName: "nginx"
               annotations:
                 cert-manager.io/cluster-issuer: alidns-webhook-zverse-letsencrypt
-                nginx.ingress.kubernetes.io/rewrite-target: /$1
               hosts:
                 - argo-workflows.internal.ska.zverse.space
               paths:
