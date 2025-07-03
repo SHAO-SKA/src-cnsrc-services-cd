@@ -49,7 +49,8 @@ spec:
               hosts:
                 - argo-workflows.internal.ska.zverse.space
               paths:
-                - /?(.*)
+                - /
+              pathType: Prefix
               tls:
                 - secretName: argo-workflows.internal.ska.zverse.space-tls
                   hosts:
