@@ -42,6 +42,7 @@
           argocd app sync argocd/cert-manager-issuer && argocd app wait argocd/cert-manager-issuer
           ```
         + ```shell
+          kubectl get namespace business-workflows > /dev/null 2>&1 || kubectl create namespace business-workflows
           argocd app sync argocd/argo-workflows && argocd app wait argocd/argo-workflows
           ```
     * with storage class
