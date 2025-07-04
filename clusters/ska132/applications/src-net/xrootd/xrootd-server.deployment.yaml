@@ -18,11 +18,12 @@ spec:
         fsGroup: 1000
       initContainers:
         - name: install-certs
-          image: container-image-mirror.internal.ska.zverse.space:32443/docker.io/library/rockylinux:9.3.20231119
+          image: m.daocloud.io/docker.io/library/rockylinux:9.3.20231119
           command:
             - /bin/bash
             - -c
             - |
+              set -x
               # Install Grid certificates. These are not needed for XrdHttp, but populating
               # /etc/grid-security/certificates seem to be needed for xroot/1094 to operate.
               yum install -y https://repo.opensciencegrid.org/osg/3.6/osg-3.6-el9-release-latest.rpm
@@ -61,10 +62,9 @@ spec:
               mountPath: /etc/grid-security/tls-secrets/
             - name: tls-certs
               mountPath: /etc/grid-security/xrd/
-
       containers:
         - name: xrootd
-          image: container-image-mirror.internal.ska.zverse.space:32443/docker.io/rucio/xrootd:36.2.0
+          image: m.daocloud.io/docker.io/rucio/test-xrootd:latest
           command: ["/usr/bin/xrootd"]
           args: ["-c", "/etc/xrootd/xrootd-http.cfg", "-k", "fifo", "-s", "/run/xrootd/xrootd-http.pid", "-n", "http"]
           ports:
@@ -104,7 +104,7 @@ spec:
         - name: xrootd-data
           nfs:
             server: 192.168.6.66
-            path: /share/cnSRC/application/xrootd
+            path: /share/cnSRC/ska132/application/xrootd/
             readOnly: false
         - name: spool-dir
           emptyDir: {}

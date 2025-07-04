@@ -88,5 +88,6 @@
           ```
     * sub module sync
         + ```shell
+          kubectl get namespace xrootd > /dev/null 2>&1 || kubectl create namespace xrootd
           argocd app sync argocd/xrootd && argocd app wait argocd/xrootd
           ```
