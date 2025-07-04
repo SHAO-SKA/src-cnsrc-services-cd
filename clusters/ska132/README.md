@@ -65,4 +65,15 @@
         + ```shell
           argocd app sync argocd/nfs-provisioner && argocd app wait argocd/nfs-provisioner
           ```
-        
+5. sync and wait for `monitor` to be ready
+    * sub module entrance
+        + ```shell
+          argocd app sync argocd/monitor && argocd app wait argocd/monitor
+          ```
+    * sub module sync
+        + ```shell
+          kubectl -n monitor create secret generic kube-prometheus-grafana-credentials \
+            --from-literal="admin-user=admin" \
+            --from-literal="admin-password=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)"
+          argocd app sync argocd/kube-prometheus-stack && argocd app wait argocd/kube-prometheus-stack
+          ```

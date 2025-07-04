@@ -1,0 +1,89 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitor
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 67.2.0
+      helm:
+        releaseName: kube-prometheus-stack
+        valuesObject:
+          global:
+            imageRegistry: m.daocloud.io/quay.io
+          crds:
+            enabled: true
+          alertmanager:
+            alertmanagerSpec:
+              image:
+                registry: m.daocloud.io/quay.io
+              retention: 168h
+              storage:
+                volumeClaimTemplate:
+                  spec:
+                    storageClassName: "nfs-external-nas"
+                    accessModes: ["ReadWriteOnce"]
+                    resources:
+                      requests:
+                        storage: 10Gi
+          prometheusOperator:
+            admissionWebhooks:
+              deployment:
+                image:
+                  registry: m.daocloud.io/quay.io
+              patch:
+                image:
+                  registry: m.daocloud.io/registry.k8s.io
+            image:
+              registry: m.daocloud.io/quay.io
+            prometheusConfigReloader:
+              image:
+                registry: m.daocloud.io/quay.io
+            thanosImage:
+              registry: m.daocloud.io/quay.io
+          grafana:
+            enabled: true
+            admin:
+              existingSecret: "kube-prometheus-grafana-credentials"
+              userKey: admin-user
+              passwordKey: admin-password
+            ingress:
+              enabled: true
+              annotations:
+                kubernetes.io/ingress.class: nginx
+                cert-manager.io/cluster-issuer: alidns-webhook-zverse-letsencrypt
+              hosts:
+                - grafana.ska.zverse.space
+              tls:
+                - secretName: grafana.ska.zverse.space-tls
+                  hosts:
+                  - grafana.ska.zverse.space
+          thanosRuler:
+            enabled: false
+            thanosRulerSpec:
+              image:
+                registry: m.daocloud.io/quay.io
+          prometheus:
+            ingress:
+              enabled: false
+            prometheusSpec:
+              image:
+                registry: m.daocloud.io/quay.io
+              storageSpec:
+                volumeClaimTemplate:
+                  spec:
+                    storageClassName: "nfs-external-nas"
+                    accessModes: ["ReadWriteOnce"]
+                    resources:
+                      requests:
+                        storage: 100Gi
