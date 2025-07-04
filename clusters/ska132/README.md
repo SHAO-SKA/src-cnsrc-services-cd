@@ -78,3 +78,6 @@
             --from-literal="admin-password=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16)"
           argocd app sync argocd/kube-prometheus-stack && argocd app wait argocd/kube-prometheus-stack
           ```
+        + ```shell
+          argocd app sync argocd/prometheus-push-gateway && argocd app wait argocd/prometheus-push-gateway
+          ```
