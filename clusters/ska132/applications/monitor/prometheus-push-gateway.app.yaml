@@ -1,0 +1,37 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-push-gateway
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitor
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: prometheus-pushgateway
+      targetRevision: 2.16.0
+      helm:
+        releaseName: prometheus-push-gateway
+        valuesObject:
+          image:
+            repository: m.daocloud.io/quay.io/prometheus/pushgateway
+          ingress:
+            enabled: true
+            className: nginx
+            annotations:
+              nginx.ingress.kubernetes.io/rewrite-target: /$1
+            hosts:
+              - push-gateway.ska.zverse.space
+            path: /?(.*)
+          serviceMonitor:
+            enabled: true
+            namespace: monitor
+            jobLabel: prometheus-push-gateway
+            interval: 10s
+            additionalLabels:
+              release: kube-prometheus-stack
