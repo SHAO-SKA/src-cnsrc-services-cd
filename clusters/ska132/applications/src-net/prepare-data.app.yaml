@@ -1,0 +1,88 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prepare-data
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+  project: default
+  source:
+    repoURL: https://gitlab.com/api/v4/projects/61599309/packages/helm/stable
+    chart: src-net-preparedata
+    targetRevision: 0.1.0
+    helm:
+      releaseName: src-net-preparedata
+      values: |
+        persistentVolumeClaim:
+          userspace:
+            mountPath: /share/cnSRC/application/jupyter
+            nfs:
+              server: 192.168.6.66
+          rse:  
+            mountPath: /share/cnSRC/application/xrootd/
+            nfs:
+              server: 192.168.6.66
+        core:
+          approach: copy_to_user_area
+          image:
+            registry: container-registry.internal.ska.zverse.space:32443/perparedata
+            name: preparedata-core
+            tag: copy_method
+            pullPolicy: Always
+          service:
+            type: ClusterIP
+            port: 8000
+          deployment:
+            replicas: 1
+            resources:
+              limits:
+                cpu: "1000m"
+                memory: "2048Mi"
+              requests:
+                cpu: "500m"
+                memory: "1024Mi"
+        celery:
+          image:
+            registry: container-registry.internal.ska.zverse.space:32443/perparedata
+            name: celery-worker
+            tag: copy_method
+            pullPolicy: Always
+          persistent:
+            mountPath: /tmp/celery
+          deployment:
+            replicas: 1
+            resources:
+              limits:
+                cpu: "1000m"
+                memory: "4096Mi"
+              requests:
+                cpu: "500m"
+                memory: "2048Mi"
+        rabbitmq:
+          authentication:
+            user: user
+            password: user
+          image:
+            registry: m.daocloud.io/docker.io/library
+            name: rabbitmq
+            tag: 3-management
+            pullPolicy: Always
+          service:
+            name: rabbitmq-service
+            type: ClusterIP
+            port: 5672
+            managementPort: 15672
+          deployment:
+            replicas: 1
+            resources:
+              limits:
+                cpu: "1000m"
+                memory: "1024Mi"
+              requests:
+                cpu: "500m"
+                memory: "512Mi"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: preparedata

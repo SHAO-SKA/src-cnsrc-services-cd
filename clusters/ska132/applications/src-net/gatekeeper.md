@@ -6,7 +6,15 @@
     * ```shell
       git clone https://gitlab.com/AaronYang2333/ska-src-dm-da-service-gatekeeper.git
       ```
-2. package helm chart
+2. render templates by make
+    * ```shell
+      podman run --rm \
+        -v $(pwd)/ska-src-dm-da-service-gatekeeper:/code \
+        --workdir /code \
+        -it m.daocloud.io/docker.io/library/golang:latest \
+        bash -c 'curl -L -o /tmp/helm-v3.18.3-linux-amd64.tar.gz https://get.helm.sh/helm-v3.18.3-linux-amd64.tar.gz && tar zxvf /tmp/helm-v3.18.3-linux-amd64.tar.gz -C /tmp/ && mv /tmp/linux-amd64/helm /usr/local/bin/ && export GOPROXY=https://goproxy.cn,direct && go install github.com/mikefarah/yq/v3@latest && make build-gatekeeper-helm-templates && helm dependency update etc/helm'
+      ```
+3. package helm chart
     * ```shell
       mkdir -p /tmp/helm-chart
       podman run --rm \
@@ -17,7 +25,7 @@
           --destination /code/.build/chart \
           /code/etc/helm
       ```
-3. push helm chart package
+4. push helm chart package
     * ```shell
       podman run --rm \
         -v /tmp/helm-chart:/code/.build/chart \

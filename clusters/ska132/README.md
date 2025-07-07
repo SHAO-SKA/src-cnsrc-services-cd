@@ -95,5 +95,8 @@
           argocd app sync argocd/xrootd && argocd app wait argocd/xrootd
           ```
         + ```shell
-          argocd app sync argocd/gatekeeper && argocd app wait argocd/gatekeeper
+          argocd app sync argocd/src-net-soda && argocd app wait argocd/src-net-soda
+          ```
+        + ```shell
+          argocd app sync argocd/src-net-gatekeeper && argocd app wait argocd/src-net-gatekeeper
           ```

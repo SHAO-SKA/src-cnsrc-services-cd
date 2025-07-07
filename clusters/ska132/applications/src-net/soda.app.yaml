@@ -11,33 +11,36 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: soda
-  source:
-    repoURL: https://gitlab.com/api/v4/projects/61599309/packages/helm/stable
-    chart: ska-src-soda
-    targetRevision: 0.0.4
-    helm:
-      releaseName: src-net-soda
-      valuesObject:
-        config:
-          datasets: |-
-            fits_path_surveys=/srv/soda/datasets
-            fits_path_cutouts=/srv/soda/cutouts
-            ivoid_authority=test.skao
-            ivoid_resource_key=datasets/fits
-        deployment:
-          namespace: soda
-        extraEnv:
-        - name: SECURITY
-          value: null
-        - name: ACCESS_CONTEXT_ROOT
-          value: ska#datasets
-        image:
-          repository: harbor.srcdev.skao.int/soda/visivo-vlkb-soda
-        ingress:
-          enabled: false
-          host: null
-          proxyBodySize: 5000m
-          proxyBuffering: "off"
-          proxyRequestBuffering: "off"
-        persistence:
-          existingClaim: soda-rucio-pvc 
+  sources:
+    - path: clusters/ska132/applications/src-net/soda
+      repoURL: https://gitlab.com/ska-telescope/src/deployments/cnsrc/ska-src-cnsrc-services-cd.git
+      targetRevision: main
+    - repoURL: https://gitlab.com/api/v4/projects/61599309/packages/helm/stable
+      chart: ska-src-soda
+      targetRevision: 0.0.4
+      helm:
+        releaseName: src-net-soda
+        valuesObject:
+          config:
+            datasets: |-
+              fits_path_surveys=/srv/soda/datasets
+              fits_path_cutouts=/srv/soda/cutouts
+              ivoid_authority=test.skao
+              ivoid_resource_key=datasets/fits
+          deployment:
+            namespace: soda
+          extraEnv:
+          - name: SECURITY
+            value: null
+          - name: ACCESS_CONTEXT_ROOT
+            value: ska#datasets
+          image:
+            repository: harbor.srcdev.skao.int/soda/visivo-vlkb-soda
+          ingress:
+            enabled: false
+            host: null
+            proxyBodySize: 5000m
+            proxyBuffering: "off"
+            proxyRequestBuffering: "off"
+          persistence:
+            existingClaim: soda-rucio-pvc 
