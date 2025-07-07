@@ -10,6 +10,9 @@
     * ```shell
       bash clusters/ska132/applications/argocd.login.sh
       ```
+## haproxy
+
+1. [manual for usage](haproxy/README.md)
 
 ## applications
 
