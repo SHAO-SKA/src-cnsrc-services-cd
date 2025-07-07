@@ -100,3 +100,9 @@
         + ```shell
           argocd app sync argocd/src-net-gatekeeper && argocd app wait argocd/src-net-gatekeeper
           ```
+        + ```shell
+          #export JUPYTERHUB_CLIENT_ID=your_jupyterhub_client_id
+          #export JUPYTERHUB_CLIENT_SECRET=your_jupyterhub_client_secret
+          kubectl -n argocd patch application src-net-jupyterhub --type merge --patch '{"spec":{"sources":[{"helm":{"valuesObject":{"hub":{"config":{"GenericOAuthenticator":{"client_id":"'"$JUPYTERHUB_CLIENT_ID"'","client_secret":"'"$JUPYTERHUB_CLIENT_SECRET"'"}}}}}}]}}}'
+          argocd app sync argocd/src-net-jupyterhub && argocd app wait argocd/src-net-jupyterhub
+          ```

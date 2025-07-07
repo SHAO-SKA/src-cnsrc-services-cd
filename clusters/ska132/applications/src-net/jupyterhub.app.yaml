@@ -1,0 +1,135 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: src-net-jupyterhub
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jupyterhub
+  sources:
+    - repoURL: https://hub.jupyter.org/helm-chart/
+      chart: jupyterhub
+      targetRevision: 4.1.0
+      helm:
+        releaseName: src-net-jupyterhub
+        valuesObject:
+          prePuller:
+            hook:
+              image:
+                name: m.daocloud.io/quay.io/jupyterhub/k8s-image-awaiter
+            pause:
+              image:
+                name: m.daocloud.io/registry.k8s.io/pause
+          scheduling:
+            userScheduler:
+              image:
+                name: m.daocloud.io/registry.k8s.io/kube-scheduler
+          hub:
+             config:
+                Authenticator:
+                   enable_auth_state: true
+                   allow_all: true
+                GenericOAuthenticator:
+                   login_service: "Jupyterhub"
+                   client_id: your_jupyterhub_client_id
+                   client_secret: your_jupyterhub_client_secret
+                   oauth_callback_url:  https://jupyterhub.ska.zverse.space/hub/oauth_callback
+                   authorize_url: https://ska-iam.stfc.ac.uk/authorize
+                   token_url: https://ska-iam.stfc.ac.uk/token
+                   userdata_url: https://ska-iam.stfc.ac.uk/userinfo
+                   scope:
+                   - openid
+                   - profile
+                   - email
+                   - offline_access
+                   userdata_token_method: GET
+                   userdata_params: {'state': 'state'}
+                   username_key: preferred_username
+                JupyterHub:
+                   authenticator_class: generic-oauth
+             baseUrl: /
+             db:
+                pvc:
+                   storageClassName: nfs-external-nas
+          proxy:
+            service:
+              type: ClusterIP
+            https:
+              enabled: false
+          ingress:
+            enabled: true
+            pathType: ImplementationSpecific
+            ingressClassName: nginx
+            annotations:
+              cert-manager.io/cluster-issuer: alidns-webhook-zverse-letsencrypt
+              nginx.ingress.kubernetes.io/proxy-body-size: 2g
+              nginx.org/client-max-body-size: 2g
+              nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+              nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+              nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+            hosts:
+              - jupyterhub.ska.zverse.space
+            tls:
+              - hosts:
+                  - jupyterhub.ska.zverse.space
+                secretName: jupyterhub.ska.zverse.space-tls
+          singleuser:
+             memory:
+                limit: 8G
+                guarantee: 8G
+             cpu:
+                limit: 4
+                guarantee: 4
+             storage:
+              type: none
+              extraVolumes:
+              - name: user-data
+                nfs:
+                  server: 192.168.6.66
+                  path: /share/cnSRC/application/jupyter
+                  readOnly: false
+              extraVolumeMounts:
+              - name: user-data
+                mountPath: /home/jovyan/
+                subPath: "{username}"
+                mountPropagation: HostToContainer
+             initContainers:
+             - name: fix-permissions
+               image: m.daocloud.io/docker.io/busybox:1.37.0
+               volumeMounts:
+                 - name: user-data
+                   mountPath: /jupyter-data/homes-pd/
+               command:
+                 - "sh"
+                 - "-c"
+                 - |
+                   HOME_DIR="/jupyter-data/homes-pd/{username}"
+                   USER_ID=1000
+                   GROUP_ID=100
+                   if [ -d "$HOME_DIR" ] && [ "$(stat -c "%u" "$HOME_DIR")" -eq "$USER_ID" ] && [ "$(stat -c "%g" "$HOME_DIR")" -eq "$GROUP_ID" ]; then
+                     echo "Directorio $HOME_DIR ya existe con los permisos correctos. No se hace nada."
+                   else
+                     echo "Creando y configurando $HOME_DIR"
+                     mkdir -p "$HOME_DIR"
+                     chown -R $USER_ID:$GROUP_ID "$HOME_DIR"
+                     chmod -R 770 "$HOME_DIR"
+                   fi
+             defaultUrl: "/lab"
+             extraEnv:
+                JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
+             image:
+                name: m.daocloud.io/docker.io/jupyter/minimal-notebook
+                tag: latest
+             profileList:
+             - display_name: "Minimal environment"
+               description: "A Python environment."
+               default: true
+             - display_name: "Data science environment"
+               description: "Python, R and Julia environments."
+               kubespawner_override:
+                 image: m.daocloud.io/docker.io/jupyter/datascience-notebook:latest
