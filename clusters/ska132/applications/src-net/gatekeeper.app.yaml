@@ -33,7 +33,7 @@ spec:
               checksum/templates: 3840126d
           echo:
             image:
-              registry: container-registry.internal.ska.zverse.space:32443/harbor.srcdev.skao.int/ska-src-dm-da-service-gatekeeper/service-gatekeeper-echo:1.0.1
+              registry: container-registry.internal.ska.zverse.space:32443/harbor.srcdev.skao.int/ska-src-dm-da-service-gatekeeper
           gatekeeper:
             cache:
               ttl: 3600
