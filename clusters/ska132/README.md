@@ -112,3 +112,6 @@
           kubectl -n argocd patch application src-net-jupyterhub --type merge --patch '{"spec":{"sources":[{"helm":{"valuesObject":{"hub":{"config":{"GenericOAuthenticator":{"client_id":"'"$JUPYTERHUB_CLIENT_ID"'","client_secret":"'"$JUPYTERHUB_CLIENT_SECRET"'"}}}}}}]}}'
           argocd app sync argocd/src-net-jupyterhub && argocd app wait argocd/src-net-jupyterhub
           ```
+        + ```shell
+          argocd app sync argocd/src-net-preparedata && argocd app wait argocd/src-net-preparedata
+          ```
