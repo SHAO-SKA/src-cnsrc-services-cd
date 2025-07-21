@@ -24,6 +24,9 @@ spec:
                 registry: m.daocloud.io/registry.k8s.io
               service:
                 type: NodePort
+                nodePorts:
+                  http: 31080
+                  https: 31443
               ingressClass: gatekeeper-nginx
               admissionWebhooks:
                 patch:
