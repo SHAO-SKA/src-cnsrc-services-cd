@@ -44,3 +44,7 @@ docker run -it --rm -e RUCIO_CFG_CLIENT_ACCOUNT=$RUCIO_CFG_CLIENT_ACCOUNT regist
 3. Results Review:
 - The tool will execute all enabled checks and display results
 - Debug mode (ENABLE_DEBUG=y) will show detailed command execution
+
+## Test History
+### ska132
+- 2025-07-21: [ska123-20250721](./test-history/ska123-20250721/)
