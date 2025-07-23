@@ -13,9 +13,11 @@ To check the service is up, access availability end point which returns the stat
 # root@ska132-01:~# kubectl -n soda get svc
 # NAME           TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
 # ska-src-soda   NodePort   10.108.133.210   <none>        8080:31102/TCP   14d
+# using soda service directly
 curl http://192.168.254.192:31102/ska/datasets/availability
 
-curl  -H "Authorization: Bearer $SKA_TOKEN"  https://gatekeeper.ska.zverse.space/soda/ska/datasets/availability
+# using gatekeeper ingress to redirect soda service
+curl  -H "Authorization: Bearer $DM_TOKEN"  https://gatekeeper.ska.zverse.space/soda/ska/datasets/availability
 ```
 
 Result:
@@ -27,17 +29,19 @@ Result:
 </vosi:availability>
 ```
 
-- using gatekeeper ingress to redirect soda service
 ```bash
 export DM_TOKEN=xxxx.xxx
 export FILE_ID=ivo://src.skao.org/datasets/fits?chocolate/da/56/pi24_run_1_cleaned_reupload.fits
 export CIRCLE="150.1147624510 2.3490950070 0.05"
 
+# using soda service directly
 curl --data-urlencode "ID=$FILE_ID" --data-urlencode "CIRCLE=$CIRCLE" --data-urlencode "RESPONSE_FORMAT=application/fits" -H "Authorization: Bearer $DM_TOKEN"  --output /tmp/output.fits http://192.168.254.192:31102/ska/datasets/soda
 
+# using gatekeeper ingress to redirect soda service
 curl --data-urlencode "ID=$FILE_ID" --data-urlencode "CIRCLE=$CIRCLE" --data-urlencode "RESPONSE_FORMAT=application/fits" -H "Authorization: Bearer $SKA_TOKEN"  --output /tmp/output.fits https://gatekeeper.ska.zverse.space/soda/ska/datasets/soda
 ```
 
+Result:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <VOTABLE xmlns="http://www.ivoa.net/xml/VOTable/v1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3">
@@ -77,4 +81,4 @@ curl --data-urlencode "ID=$FILE_ID" --data-urlencode "CIRCLE=$CIRCLE" --data-url
 
 ## Test History
 ### ska132
-- 2025-07-21: [result1.png](https://gitlab.com/AaronYang2333/ska-src-cnsrc-services-cd/-/raw/main/tests/applications/src-net/soda/test-history/ska132-20250722/result1.png), [result2.png](https://gitlab.com/AaronYang2333/ska-src-cnsrc-services-cd/-/raw/main/tests/applications/src-net/soda/test-history/ska132-20250722/result2.png), [using gatekeeper step1](https://gitlab.com/AaronYang2333/ska-src-cnsrc-services-cd/-/raw/main/tests/applications/src-net/soda/test-history/ska132-20250722/gw_step1.png), [using gatekeeper step2](https://gitlab.com/AaronYang2333/ska-src-cnsrc-services-cd/-/raw/main/tests/applications/src-net/soda/test-history/ska132-20250722/gw_step2.png)
+- 2025-07-22: [result1.png](https://gitlab.com/AaronYang2333/ska-src-cnsrc-services-cd/-/raw/main/tests/applications/src-net/soda/test-history/ska132-20250722/result1.png), [result2.png](https://gitlab.com/AaronYang2333/ska-src-cnsrc-services-cd/-/raw/main/tests/applications/src-net/soda/test-history/ska132-20250722/result2.png), [using gatekeeper step1](https://gitlab.com/AaronYang2333/ska-src-cnsrc-services-cd/-/raw/main/tests/applications/src-net/soda/test-history/ska132-20250722/gw_step1.png), [using gatekeeper step2](https://gitlab.com/AaronYang2333/ska-src-cnsrc-services-cd/-/raw/main/tests/applications/src-net/soda/test-history/ska132-20250722/gw_step2.png)

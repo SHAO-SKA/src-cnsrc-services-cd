@@ -61,7 +61,7 @@ spec:
                   secret_name: gatekeeper.ska.zverse.space-tls
               - route: "/soda"
                 namespace: soda
-                prefix: "http://"
+                prefix: "https://"
                 service_name: ska-src-soda
                 ingress_host: gatekeeper.ska.zverse.space
                 port: 8080
@@ -71,6 +71,7 @@ spec:
                   secret_name: gatekeeper.ska.zverse.space-tls
               - route: "/preparedata"
                 namespace: preparedata
+                prefix: "https://"
                 service_name: preparedata-service
                 ingress_host: gatekeeper.ska.zverse.space
                 port: 8000

@@ -6,8 +6,6 @@
 - [SKA SRC Client](https://gitlab.com/ska-telescope/src/src-service-apis/ska-src-clients) Binary has been installed
 - [Gatekeeper](https://ska-telescope.gitlab.io/src/kb/ska-src-docs-operator/services/local/mandatory/authorization/gatekeeper.html) service is up
 
-## Running the Connectivity Test
-Gatekeeper is an nginx reverse proxy that acts as a protected access point for firewalled compute services by first authorising requests via the Permissions API.
 
 ### Environment Variables Setup
 Set the environment variable "SKA_TOKEN". 
@@ -21,7 +19,6 @@ export SKA_TOKEN=xxxx.xxx
 
 ### Running the Connectivity Test
 
-Using the docker command directly against the remote image
 ```bash
 curl -XGET https://gatekeeper.ska.zverse.space/ping -H "Authorization: Bearer $SKA_TOKEN" 
 
