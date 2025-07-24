@@ -26,11 +26,18 @@ export SKA_TOKEN=xxxx.xxx
 
 # using preparedata service directly
 curl -k -X 'POST' http://192.168.254.178:31425 -H "Authorization: Bearer $SKA_TOKEN" -H 'accept: application/json' -H 'Content-Type: application/json' -d '[[ "chocolate:pi24_run_1_cleaned_reupload.fits","chocolate/da/56/pi24_run_1_cleaned_reupload.fits","./chocolate"]]'
+
 # integrate with gatekeeper
 curl -X 'POST' https://gatekeeper.ska.zverse.space/preparedata -H "Authorization: Bearer $SKA_TOKEN" -H 'accept: application/json' -H 'Content-Type: application/json' -d '[[ "chocolate:pi24_run_1_cleaned_reupload.fits","chocolate/da/56/pi24_run_1_cleaned_reupload.fits","./chocolate"]]'
 # you will get a taskID
+export TASK_ID=xxxx
+
+# using preparedata service directly
+curl -k -X 'GET' http://192.168.254.178:31425/$TASK_ID -H 'accept: application/json' -H "Authorization: Bearer $SKA_TOKEN"
+# integrate with gatekeeper
+curl -X 'GET' https://gatekeeper.ska.zverse.space/preparedata/$TASK_ID -H 'accept: application/json' -H "Authorization: Bearer $SKA_TOKEN"
 ```
 
 ## Test History
 ### ska132
-- 2025-07-23: [step1.png](https://gitlab.com/AaronYang2333/ska-src-cnsrc-services-cd/-/raw/main/tests/applications/src-net/preparedata/test-history/ska132-20250723/step1.png)
+- 2025-07-23: [step1.png](https://gitlab.com/AaronYang2333/ska-src-cnsrc-services-cd/-/raw/main/tests/applications/src-net/preparedata/test-history/ska132-20250723/step1.png), [result1.png](https://gitlab.com/AaronYang2333/ska-src-cnsrc-services-cd/-/raw/main/tests/applications/src-net/preparedata/test-history/ska132-20250723/result1.png)
