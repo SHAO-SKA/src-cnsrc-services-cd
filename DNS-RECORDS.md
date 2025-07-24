@@ -3,8 +3,9 @@
 ## A
 local.ska.zverse.space                      192.168.254.15
 entrance.ska.zverse.space                   202.127.3.156
-internal.ska.zverse.space                   192.168.254.178
-internal.ska.zverse.space                   192.168.254.179
+internal.ska.zverse.space                   192.168.6.175
+internal.ska.zverse.space                   192.168.6.176
+internal.ska.zverse.space                   192.168.6.177
 
 ## CNAME
 *.local.ska	                                local.ska.zverse.space

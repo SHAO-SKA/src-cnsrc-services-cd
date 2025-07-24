@@ -7,8 +7,9 @@
 | 192.168.254.192 | ska132-01   | control-plane | 16 vCPU, 15GB | 2TB SSD     |
 | 192.168.254.xxx | ska132-xx   | control-plane | xx vCPU, xxGB | 2TB SSD     |
 | 192.168.254.xxx | ska132-xx   | control-plane | xx vCPU, xxGB | 2TB SSD     |
-| 192.168.254.178 | ska132-02   | worker        | 16 vCPU, 15GB | 2TB SSD     |
-| 192.168.254.179 | ska132-03   | worker        | 32 vCPU, 62GB | 2TB SSD     |
+| 192.168.254.175 | ska132-03   | worker        | 32 vCPU, 62GB | 2TB SSD     |
+| 192.168.254.176 | ska132-03   | worker        | 32 vCPU, 62GB | 2TB SSD     |
+| 192.168.254.177 | ska132-03   | worker        | 32 vCPU, 62GB | 2TB SSD     |
 
 ## external nfs storage cluster provided by huawei
 
