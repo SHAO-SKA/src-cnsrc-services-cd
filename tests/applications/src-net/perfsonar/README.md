@@ -9,7 +9,6 @@
 ```shell
 podman run -td --name perfsonar-testpoint  -p 30443:443  -p 861:861 -p 5201:5201 --privileged --replace --tmpfs /run --tmpfs /run/lock --tmpfs /tmp -v /sys/fs/cgroup:/sys/fs/cgroup:rw --cgroupns host container-image-mirror.internal.ska.zverse.space:32443/docker.io/perfsonar/testpoint:systemd
 
-podman run -it --rm --name perfsonar --privileged --entrypoint bash --cgroupns host container-image-mirror.internal.ska.zverse.space:32443/docker.io/perfsonar/testpoint:systemd 
 
 podman run -td --name perfsonar-test --privileged --replace --tmpfs /run --tmpfs /run/lock --tmpfs /tmp -v /sys/fs/cgroup:/sys/fs/cgroup:rw --cgroupns host container-image-mirror.internal.ska.zverse.space:32443/docker.io/perfsonar/testpoint:systemd
 ```

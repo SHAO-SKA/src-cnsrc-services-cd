@@ -35,7 +35,7 @@ spec:
           - name: ACCESS_CONTEXT_ROOT
             value: ska#datasets
           image:
-            repository: container-registry.internal.ska.zverse.space:32443/harbor.srcdev.skao.int/soda/visivo-vlkb-soda
+            repository: harbor.srcnet.skao.int/soda/visivo-vlkb-soda
           ingress:
             enabled: false
             host: null
