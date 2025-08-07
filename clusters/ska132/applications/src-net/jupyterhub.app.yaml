@@ -91,7 +91,7 @@ spec:
               - name: user-data
                 nfs:
                   server: 192.168.6.66
-                  path: /share/cnSRC/ska132/application/jupyter
+                  path: /share/cnSRC/ska132/application/srcnet/userdata/cavern/home
                   readOnly: false
               extraVolumeMounts:
               - name: user-data

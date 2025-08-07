@@ -17,7 +17,7 @@ spec:
       valuesObject:
         persistentVolumeClaim:
           userspace:
-            mountPath: /share/cnSRC/ska132/application/jupyter
+            mountPath: /share/cnSRC/ska132/application/srcnet/userdata/cavern/home
             nfs:
               server: 192.168.6.66
           rse:  
