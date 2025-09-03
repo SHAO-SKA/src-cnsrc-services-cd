@@ -71,25 +71,26 @@ done
 echo -e "\n📡 Testing SODA endpoints...\n"
 
 for soda_url in "${SODA_ENDPOINTS[@]}"; do
+  domain=$(echo "$soda_url" | sed -E 's|https?://([^/]+).*|\1|')
   curl -s -k --get \
        -H "Authorization: Bearer $SKA_TOKEN" \
        --data-urlencode "ID=ivo://auth.example.org/datasets/fits?testing/5b/f5/PTF10tce.fits" \
        --data-urlencode "CIRCLE=351.986728 8.778684 0.01" \
        --data-urlencode "RESPONSE_FORMAT=application/fits" \
-       -o /tmp/output.fits \
+       -o "/tmp/output_${domain}.fits" \
        "$soda_url"
 
   CODE=$?
-  MIME=$(file --mime-type -b /tmp/output.fits)
+  MIME=$(file --mime-type -b /tmp/output_${domain}.fits)
 
 echo -e "\n📡 got result mime $MIME"
 
   if [[ $CODE -eq 0 && "$MIME" == "image/fits" ]]; then
-    echo -e "$GREEN $soda_url succeeded and file is FITS (image/fits)"
+    echo -e "$GREEN $soda_url succeeded and file /tmp/output_${domain}.fits is FITS (image/fits)"
   elif [[ $CODE -eq 0 && "$MIME" == "application/octet-stream" ]]; then
-    echo -e "$GREEN $soda_url succeeded and file is FITS (application/octet-stream)"
+    echo -e "$GREEN $soda_url succeeded and file /tmp/output_${domain}.fits is FITS (application/octet-stream)"
   else
-    echo -e "$RED $soda_url failed or file is not FITS (mime: $MIME)"
+    echo -e "$RED $soda_url failed or file /tmp/output_${domain}.fits is not FITS (mime: $MIME)"
   fi
 done
 
