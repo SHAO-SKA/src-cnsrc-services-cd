@@ -72,7 +72,7 @@ spec:
               - route: "/preparedata"
                 namespace: preparedata
                 prefix: "https://"
-                service_name: preparedata-service
+                service_name: core
                 ingress_host: gatekeeper.ska.zverse.space
                 port: 8000
                 uuid: 34838cc5-f7e4-4dd9-91e1-5e152ab6e8d0
