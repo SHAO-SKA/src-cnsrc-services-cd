@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: perfsonar-ingress
+  namespace: perfsonar
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  ingressClassName: gatekeeper-nginx
+  rules:
+    - host: perfsonar.dev.cnsrc.shao.ac.cn
+      http:
+        paths:
+          - backend:
+              service:
+                name: perfsonar
+                port:
+                  number: 443
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - perfsonar.dev.cnsrc.shao.ac.cn
+      secretName: perfsonar.dev.cnsrc.shao.ac.cn-cert
