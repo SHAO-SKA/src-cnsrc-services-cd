@@ -12,7 +12,9 @@ This page lists all the URLs and domains related to CNSRC (China SKA Regional Ce
    * - URL
      - Description
    * - https://perfsonar.cnsrc.shao.ac.cn
-     - CNSRC PerfSonar
+     - CNSRC PerfSONAR（prod）
+   * - https://perfsonar.dev.cnsrc.shao.ac.cn
+     - CNSRC PerfSONAR（dev；GitOps：``cnsrc/apps/perfsonar/overlays/dev``）
    * - https://harbor.cnsrc.shao.ac.cn
      - CNSRC Harbor
 
