@@ -1,0 +1,66 @@
+hub:
+  extraEnv:
+    CLIENT_SECRET:
+      valueFrom:
+        secretKeyRef:
+          name: jupyterhub
+          key: CLIENT_SECRET
+  extraConfig:
+    10-oauth-secret.py: |
+      import os
+      c.GenericOAuthenticator.client_secret = os.environ["CLIENT_SECRET"]
+  config:
+    Authenticator:
+      enable_auth_state: true
+      allow_all: true
+    GenericOAuthenticator:
+      login_service: "Jupyterhub"
+      client_id: 726b2483-81a3-4803-b439-e5157795f3e5
+      #client_secret: "APrNlr1U29NAGuyDCtIxjXH87m3nITSTxYXN-6X9f_U4t-SLhTydolyvyRxZJQGAnWVJQvl03Sn9dmf8ctLR0K0"
+      #client_secret: |
+      #  print("DEBUG CLIENT_SECRET =", __import__("os").environ.get("CLIENT_SECRET"))
+      #  __import__("os").environ.get("CLIENT_SECRET")
+      authorize_url: https://ska-iam.stfc.ac.uk/authorize
+      token_url: https://ska-iam.stfc.ac.uk/token
+      userdata_url: https://ska-iam.stfc.ac.uk/userinfo
+      oauth_callback_url: "https://jupyterhub.dev.cnsrc.shao.ac.cn/hub/oauth_callback"
+      scope:
+        - openid
+        - profile
+        - email
+        - offline_access
+      userdata_token_method: GET
+      userdata_params: { "state": "state" }
+      username_key: preferred_username
+    JupyterHub:
+      authenticator_class: generic-oauth
+  baseUrl: /
+  db:
+    pvc:
+      storageClassName: nfs-client
+singleuser:
+  memory:
+    limit: 8G
+    guarantee: 8G
+  cpu:
+    limit: 4
+    guarantee: 4
+  storage:
+    dynamic:
+      storageClass: nfs-client
+    capacity: 200Gi
+  defaultUrl: "/lab"
+  extraEnv:
+    JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
+  image:
+    name: m.daocloud.io/docker.io/jupyter/minimal-notebook
+    tag: latest
+  profileList:
+  - display_name: "Minimal environment"
+    description: "A Python environment."
+    default: true
+  - display_name: "Data science environment"
+    description: "Python, R and Julia environments."
+    kubespawner_override:
+      image: m.daocloud.io/docker.io/jupyter/datascience-notebook:latest
+

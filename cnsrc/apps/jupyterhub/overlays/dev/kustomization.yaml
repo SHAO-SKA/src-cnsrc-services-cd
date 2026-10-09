@@ -1,0 +1,47 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: jupyterhub
+
+resources:
+- ../../base
+- secrets.yaml
+
+# Helm chart definition with values overlay
+helmCharts:
+  - name: jupyterhub
+    repo: https://hub.jupyter.org/helm-chart/
+    version: "4.1.0"
+    namespace: jupyterhub
+    releaseName: jupyterhub
+    # overlay values file that will override the base
+    valuesFile: values.yaml
+
+images:
+  - name: quay.io/jupyterhub/k8s-network-tools
+    newName: m.daocloud.io/quay.io/jupyterhub/k8s-network-tools
+  - name: quay.io/jupyterhub/k8s-singleuser-sample
+    newName: m.daocloud.io/quay.io/jupyterhub/k8s-singleuser-sample
+  - name: registry.k8s.io/pause
+    newName: m.daocloud.io/registry.k8s.io/pause
+  - name: quay.io/jupyterhub/k8s-hub
+    newName: m.daocloud.io/quay.io/jupyterhub/k8s-hub
+  - name: quay.io/jupyterhub/configurable-http-proxy
+    newName: m.daocloud.io/quay.io/jupyterhub/configurable-http-proxy
+  - name: registry.k8s.io/kube-scheduler
+    newName: m.daocloud.io/registry.k8s.io/kube-scheduler
+  - name: quay.io/jupyterhub/k8s-image-awaiter
+    newName: m.daocloud.io/quay.io/jupyterhub/k8s-image-awaiter
+
+patches:
+  - path: patch-svc-proxy-public.yaml
+# patches:
+#   - target:
+#       kind: Service
+#       name: proxy-public
+#     patch: |
+#       apiVersion: v1
+#       kind: Service
+#       metadata:
+#         name: proxy-public
+#       spec:
+#         type: ClusterIP
